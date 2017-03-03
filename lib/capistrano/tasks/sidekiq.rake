@@ -63,10 +63,10 @@ namespace :sidekiq do
       execute "if [ -d #{current_path} ] && [ -f #{fetch(:sidekiq_pid)} ] && kill -0 `cat #{fetch(:sidekiq_pid)}`> /dev/null 2>&1; then cd #{current_path} && /bin/bash -lc 'bundle exec sidekiqctl quiet #{fetch(:sidekiq_pid)}' ; else echo 'Sidekiq is not running'; fi"
     end
   end
-
-  after 'deploy:starting', 'sidekiq:check_systemd'
-  after 'deploy:starting', 'sidekiq:quiet'
-  after 'deploy:updated', 'sidekiq:stop'
-  after 'deploy:reverted', 'sidekiq:stop'
-  after 'deploy:published', 'sidekiq:start'
 end
+
+after 'deploy:starting', 'sidekiq:check_systemd'
+after 'deploy:starting', 'sidekiq:quiet'
+after 'deploy:updated', 'sidekiq:stop'
+after 'deploy:reverted', 'sidekiq:stop'
+after 'deploy:published', 'sidekiq:start'
