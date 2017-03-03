@@ -4,12 +4,14 @@ namespace :load do
     set :sidekiq_pid, -> { File.join(shared_path, 'tmp', 'pids', 'sidekiq.pid') }
     set :sidekiq_log, -> { File.join(shared_path, 'log', 'sidekiq.log') }
     set :sidekiq_service, -> { "sidekiq-#{fetch(:application).downcase.gsub(/[ _]/, '-')}" }
-
-    after 'deploy:starting', 'sidekiq:quiet'
-    after 'deploy:updated', 'sidekiq:stop'
-    after 'deploy:reverted', 'sidekiq:stop'
-    after 'deploy:published', 'sidekiq:start'
   end
+end
+
+namespace :deploy do
+  after 'starting', 'sidekiq:quiet'
+  after 'updated', 'sidekiq:stop'
+  after 'reverted', 'sidekiq:stop'
+  after 'published', 'sidekiq:start'
 end
 
 namespace :sidekiq do
